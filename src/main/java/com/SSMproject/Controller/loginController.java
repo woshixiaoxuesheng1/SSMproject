@@ -17,7 +17,6 @@ public class loginController {
     public Result login(@RequestBody loginRequest loginRequest){
 
 
-        System.out.println("登录认证模块");
         return Result.success(loginServiceImpl.login(loginRequest));
     }
 }

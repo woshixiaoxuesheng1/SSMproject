@@ -18,6 +18,7 @@ import java.util.List;
 public class empController {
 
 
+
     @Autowired
     private empServiceImpl empServiceImpl;
 
@@ -36,6 +37,7 @@ public class empController {
     // 新增员工数据
     @PostMapping
     public Result addEmp(@RequestBody @Valid Emp emp){
+        System.out.println("第一次提交");
         empServiceImpl.addEmp(emp);
         return Result.success();
     }
