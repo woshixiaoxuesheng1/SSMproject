@@ -32,6 +32,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws IOException, ServletException {
 
 
+        System.out.println("登录接口过滤器模块");
+
         // 登录接口直接放行
         if (request.getRequestURI().equals("/login")) {
             filterChain.doFilter(request, response);
