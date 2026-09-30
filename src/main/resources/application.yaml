@@ -1,3 +1,22 @@
 spring:
-  application:
-    name: SSMproject
+  datasource:
+    url: jdbc:mysql://localhost:3306/empSSM?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    redis:
+      host: 192.168.221.133
+      port: 6379
+      username: default
+  rabbitmq:
+    host: 192.168.221.133
+    port: 5672
+    username: admin
+    password: 123456
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+

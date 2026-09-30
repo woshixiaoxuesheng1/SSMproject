@@ -2,3 +2,28 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.SSMproject.Mapper.empMapper">
+    <select id="search">
+        select id,name,age,gender,job,salary,phone from empSSM.emp
+        <where>
+            <if test="name!=null and name!=''">
+                And name LIKE concat(" {name}%")
+            </if>
+            <if test="job!=null and job != ''">
+                And job = #{job}
+            </if>
+            <if test="salary!=''">
+                And salary = #{salary}
+            </if>
+        </where>
+
+    </select>
+
+    <delete id="deleteByIds">
+        delete * from empSSM.emp where id in
+        <foreach collection="ids" item="id" open="(" close = ")" separator = ",">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
+

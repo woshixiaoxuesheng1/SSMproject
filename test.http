@@ -1,0 +1,16 @@
+### 登录
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "123456"
+}
+
+### 查询员工
+GET http://localhost:8080/emp
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiaWF0IjoxNzkwMDczMjQ5LCJleHAiOjE3OTAwNzY4NDl9.sZclj3OPbJd-112y0i7VfTndS_gnjlvpa-012h9h7Eo
+
+
+###
+GET http://localhost:8080/redis/test

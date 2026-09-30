@@ -7,16 +7,22 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
+
 
 
 @Slf4j
 // 拦截器
 @Component
-public class LoginFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
@@ -57,9 +63,20 @@ public class LoginFilter extends OncePerRequestFilter {
             Integer userId = claims.get("id", Integer.class);
             log.info("当前登录用户ID：{}", userId);
 
+            // 创建认证并放进SecurityContext中以便controller获取登录用户信息
+            Authentication authentication =
+                    new UsernamePasswordAuthenticationToken(
+                            userId,
+                            null,
+                            List.of(new SimpleGrantedAuthority("admin"))
+                    );
+
+            SecurityContextHolder
+                    .getContext()
+                    .setAuthentication(authentication);
 
 
-            // 6. JWT验证成功，放行
+            // 6. JWT认证处理完成，继续执行后续过滤器
             filterChain.doFilter(request, response);
 
         } catch (Exception e) {

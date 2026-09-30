@@ -1,4 +1,7 @@
 package com.SSMproject.Service;
 
-public class loginService {
+import com.SSMproject.entity.loginRequest;
+
+public interface loginService {
+    public String login(loginRequest loginRequest);
 }

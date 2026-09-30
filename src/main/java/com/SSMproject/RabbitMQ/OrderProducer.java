@@ -1,4 +1,4 @@
-package com.SSMproject.Producer;
+package com.SSMproject.RabbitMQ;
 
 import com.SSMproject.config.RabbitMQConfig;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

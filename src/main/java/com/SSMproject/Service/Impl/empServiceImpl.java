@@ -1,26 +1,30 @@
-package com.SSMproject.Service;
+package com.SSMproject.Service.Impl;
 
 
+import ch.qos.logback.core.model.conditional.ElseModel;
 import com.SSMproject.Mapper.empMapper;
+import com.SSMproject.Service.empService;
 import com.SSMproject.entity.Emp;
 import com.SSMproject.entity.EmpQuaryParam;
 import com.SSMproject.entity.PageResult;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.yaml.snakeyaml.events.Event;
 
-import java.io.File;
-import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.List;
 
 
 @Service
-public class empServiceImpl implements empService{
+public class empServiceImpl implements empService {
     @Autowired
     private empMapper empMapper;
+
+    // 先查看redis缓存是否有数据在查询数据库
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Override
     public List<Emp> findAll() {
@@ -29,6 +33,13 @@ public class empServiceImpl implements empService{
 
     @Override
     public Emp findById(Integer id){
+        // 查看redis是否缓存数据
+        Emp emp = (Emp) redisTemplate.opsForValue().get(id);
+        if (emp != null){
+            return emp;
+        }
+        // 将数据库的数据写入redis缓存
+        redisTemplate.opsForValue().set("emp:0",empMapper.findById(id));
         return empMapper.findById(id);
     }
 
@@ -43,11 +54,8 @@ public class empServiceImpl implements empService{
     }
 
     @Override
-    public String deleteById(Integer id){
-        if (id == null){
-            return "id所在下的员工不存在";
-        }
-        empMapper.deleteById(id);
+    public String deleteByIds(List<Integer> ids){
+        empMapper.deleteByIds(ids);
         return "删除成功";
     }
 
@@ -62,6 +70,7 @@ public class empServiceImpl implements empService{
         PageHelper.startPage(empQuaryParam.getPage(),empQuaryParam.getPagesize());
         // 分页查询
         List<Emp> empList = empMapper.page(empQuaryParam);// 调用Mapper接口查询数据库的对象数组
+        // System.out.println(empList);
         //封装查询结果
         Page<Emp> p = (Page<Emp>)empList; // 将数据库返回的数据封装成Page对象
         return new PageResult(p.getTotal(),p.getResult()); // 返回PageResult对象 装有总数据数和当前页数据
@@ -71,5 +80,6 @@ public class empServiceImpl implements empService{
     public void upload(String image,Integer id) {
         empMapper.upload(image,id);
     }
+
 
 }
