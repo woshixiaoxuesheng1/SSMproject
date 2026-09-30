@@ -70,5 +70,5 @@ public class empController {
         return Result.success(empServiceImpl.page(empQuaryParam));
     }
 
-    System.out.printf()
+
 }
